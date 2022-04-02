@@ -65,4 +65,15 @@ describe('gitty routes', () => {
   //   const res = await agent.post('/api/v1/posts').send({ post: 'This is a test.' });
   //   expect(res.body).toEqual({ id: expect.any(String), post: "This is a post." });
   // });
+
+  it('Should sign a user out', async () => {
+    const agent = request.agent(app);
+    // Does the following line sign a user in??
+    // Did not seem to work in two tests above...
+    await agent.get('/api/v1/github/auth/callback?code=42').redirects(1); 
+    const res = await agent.delete('/api/v1/github/auth');
+    expect(res.body).toEqual({
+      message: 'You have logged out.'
+    });
+  });
 });
