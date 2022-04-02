@@ -28,4 +28,13 @@ describe('gitty routes', () => {
       .redirects(1);
     expect(res.req.path).toEqual('/api/v1/posts');
   });
+
+  it('Should return 401 Unauthorized if a user tries to view posts while not logged in', async () => {
+    const res = await request(app).get('/api/v1/posts');
+
+    expect(res.body).toEqual({
+      message: 'You must be signed in to continue',
+      status: 401
+    });
+  });
 });
