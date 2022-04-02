@@ -33,7 +33,7 @@ describe('gitty routes', () => {
     const res = await request(app).get('/api/v1/posts');
 
     expect(res.body).toEqual({
-      message: 'You must be signed in to continue',
+      message: 'You must be signed in to continue.',
       status: 401
     });
   });
