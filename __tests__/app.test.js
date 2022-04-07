@@ -14,13 +14,13 @@ describe('gitty routes', () => {
     pool.end();
   });
 
-  // it('Should redirect to the github oauth page', async () => {
-  //   const res = await request(app).get('/api/v1/github/auth');
+  it('Should redirect to the github oauth page', async () => {
+    const res = await request(app).get('/api/v1/github/auth');
 
-  //   expect(res.header.location).toMatch(
-  //     /https:\/\/github.com\/login\/oauth\/authorize\?client_id=[\w\d]+&scope=user&redirect_uri=http:\/\/localhost:7890\/api\/v1\/github\/auth\/callback/i
-  //   );
-  // });
+    expect(res.header.location).toMatch(
+      /https:\/\/github.com\/login\/oauth\/authorize\?client_id=[\w\d]+&scope=user&redirect_uri=http:\/\/localhost:7890\/api\/v1\/github\/auth\/callback/i
+    );
+  });
 
   it('Should login and redirect users to /api/v1/posts', async () => {
     const res = await request
@@ -48,29 +48,27 @@ describe('gitty routes', () => {
     });
   });
 
-  // it('Should return a list of all posts as long as a user is logged in', async () => {
-  //   const agent = await request.agent(app);
-  //   await agent.get('/api/v1/github/auth/callback?code=42').redirects(1);
-  //   const res = await agent.get('/api/v1/posts');
-  // expect(res.body).toEqual(
-  //   [
-  //     { id: "1", post: "This is a post." }, { id: "2", post: "This is another post." }
-  //   ]
-  // );
-  // });
+  it('Should return a list of all posts as long as a user is logged in', async () => {
+    const agent = await request.agent(app);
+    await agent.get('/api/v1/github/auth/callback?code=42').redirects(1);
+    const res = await agent.get('/api/v1/posts');
+    expect(res.body).toEqual(
+      [
+        { id: '1', post: 'This is a post.' }, { id: '2', post: 'This is another post.' }
+      ]
+    );
+  });
 
-  // it('Should allow a user to create a post as long as a user is logged in', async () => {
-  //   const agent = await request.agent(app);
-  //   await agent.get('/api/v1/github/auth/callback?code=42').redirects(1);
-  //   const res = await agent.post('/api/v1/posts').send({ post: 'This is a test.' });
-  //   expect(res.body).toEqual({ id: expect.any(String), post: "This is a post." });
-  // });
+  it('Should allow a user to create a post as long as a user is logged in', async () => {
+    const agent = await request.agent(app);
+    await agent.get('/api/v1/github/auth/callback?code=42').redirects(1);
+    const res = await agent.post('/api/v1/posts').send({ post: 'This is a test.' });
+    expect(res.body).toEqual({ id: expect.any(String), post: 'This is a test.' });
+  });
 
   it('Should sign a user out', async () => {
     const agent = request.agent(app);
-    // Does the following line sign a user in??
-    // Did not seem to work in two tests above...
-    await agent.get('/api/v1/github/auth/callback?code=42').redirects(1); 
+    await agent.get('/api/v1/github/auth/callback?code=42').redirects(1);
     const res = await agent.delete('/api/v1/github/auth');
     expect(res.body).toEqual({
       message: 'You have logged out.'
