@@ -74,4 +74,16 @@ describe('gitty routes', () => {
       message: 'You have logged out.'
     });
   });
+
+  it('Should GET three random authors/quotes', async () => {
+    const expected = [
+      { author: expect.any(String), content: expect.any(String) },
+      { author: expect.any(String), content: expect.any(String) },
+      { author: expect.any(String), content: expect.any(String) }
+    ];
+
+    const res = await request(app).get('/api/v1/quotes');
+    expect(res.body).toEqual(expected);
+    
+  });
 });
